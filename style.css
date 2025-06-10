@@ -1,0 +1,95 @@
+/* 
+ * CashFlow Carnival - Expense Tracker
+ * Main stylesheet
+ */
+
+/* Gradient background animation */
+body {
+    background: linear-gradient(-45deg, #f5f7fa, #c3cfe2, #f5f7fa, #c3cfe2);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Card hover effect */
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Floating emoji animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.emoji-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Dark mode styles */
+.dark body {
+    background: #111827 !important;
+    /* Dark-900 from your Tailwind config */
+    animation: none;
+    /* Disable gradient animation in dark mode */
+}
+
+.dark .card-hover {
+    background-color: rgba(31, 41, 55, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Text contrast rules for dark mode */
+.dark .text-gray-700,
+.dark .text-gray-500,
+.dark label,
+/* Add to CSS */
+.dark input,
+.dark select,
+.dark #expense-name::placeholder {
+    background-color: rgba(31, 41, 55, 0.7) !important;
+    /* Dark-800 with transparency */
+    border-color: #374151 !important;
+    /* Dark-700 */
+    color: #E5E7EB !important;
+    /* Light text */
+}
+
+.dark input:focus,
+.dark select:focus {
+    border-color: #8B5CF6 !important;
+    /* Purple-500 */
+}
+
+/* Ensure the label floats when input has value */
+.peer:not(:placeholder-shown)~label {
+    transform: translateY(-1.75rem) scale(0.9);
+    color: #8B5CF6;
+    /* Purple-500 */
+}
+
+.dark .peer:not(:placeholder-shown)~label {
+    color: #A78BFA;
+    /* Purple-300 */
+}
