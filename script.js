@@ -17,6 +17,10 @@ const progressBar = document.getElementById("budget-progress");
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let activeFilter = "All";
 
+// Audio elements
+const cashSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-cash-register-788.mp3");
+const deleteSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3");
+
 // ======================
 // 🎨 CATEGORY THEMING
 // ======================
@@ -46,10 +50,12 @@ const categoryStyles = {
 // ======================
 // 🎢 EVENT LISTENERS
 // ======================
-document.addEventListener("DOMContentLoaded", initializeApp);
 form.addEventListener("submit", handleSubmit);
 filterSelect.addEventListener("change", handleFilterChange);
 darkModeToggle.addEventListener("click", toggleDarkMode);
+
+// Initialize the app when the script loads
+initializeApp();
 
 // ======================
 // ⚙️ CORE FUNCTIONS
@@ -71,14 +77,14 @@ function initializeApp() {
 function handleSubmit(e) {
     e.preventDefault();
 
-    // Play cash sound
-    playSound(cashSound);
-
     const name = document.getElementById("expense-name").value.trim();
     const amount = parseFloat(document.getElementById("expense-amount").value);
     const category = document.getElementById("expense-category").value;
 
     if (!validateInput(name, amount, category)) return;
+
+    // Play cash sound with error handling
+    cashSound.play().catch(e => console.log("Audio playback prevented:", e));
 
     const expense = createExpense(name, amount, category);
     expenses.push(expense);
@@ -266,21 +272,16 @@ function renderExpenseItems(expenses) {
                 </div>
             </div>
             <div class="flex gap-2">
-                <button class="edit-btn p-2 text-blue-500 hover:text-blue-700 
-                    transition-transform hover:scale-110" title="Edit" data-id="${expense.id}">
+                <button onclick="editExpense(${expense.id})" class="p-2 text-blue-500 hover:text-blue-700 
+                    transition-transform hover:scale-110" title="Edit">
                     ✏️
                 </button>
-                <button class="delete-btn p-2 text-red-500 hover:text-red-700 
-                    transition-transform hover:scale-110" title="Delete" data-id="${expense.id}">
+                <button onclick="deleteExpense(${expense.id})" class="p-2 text-red-500 hover:text-red-700 
+                    transition-transform hover:scale-110" title="Delete">
                     🗑️
                 </button>
             </div>
         `;
-
-        // Add event listeners to the buttons
-        li.querySelector('.delete-btn').addEventListener('click', () => deleteExpense(expense.id));
-        li.querySelector('.edit-btn').addEventListener('click', () => editExpense(expense.id));
-
         expenseList.appendChild(li);
     });
 }
@@ -294,7 +295,7 @@ function renderExpenseItems(expenses) {
  * @param {number} id - Expense ID
  */
 function deleteExpense(id) {
-    playSound(deleteSound);
+    deleteSound.play().catch(e => console.log("Audio playback prevented:", e));
     expenses = expenses.filter(expense => expense.id !== id);
     saveToLocalStorage();
     renderExpenses();
